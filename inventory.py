@@ -1,16 +1,6 @@
 #!/usr/bin/env python3
 import copy
 
-'''
-This is an implementation of the inventory carried by a character in a fantasy game. 
-Project modified slightly from Automate the Boring Stuff, Sweigart
-
-Original project spec called for new items to be added merely via string recognition, whereas 
-this version takes new items in as a dictionary and adds them to the inventory without list conversion.
-
-While writing this version, I discovered and utilized the copy module of Python3
-'''
-
 inventory = {'rope': 3, 'torch': 6, 'gold coin': 42, 'dagger': 1, 'arrow': 12}
 
 def displayInventory():
@@ -24,23 +14,30 @@ def displayInventory():
     print(f"Total number of different items in your inventory: {numItems}")
 
 
-def add_to_inventory(newItems):
+def addToInventory(foundItems):
     '''If item exists in inventory, add item.value to quantity. If item is new, add item as new k,v pair.'''
     # create a shallow copy of newItems dict
-    ghostItems = copy.copy(newItems)
-    print(ghostItems)
-    for key in newItems: 
+    ghostItems = copy.copy(foundItems)
+    print(ghostItems.__sizeof__())
+    for key in foundItems: 
         if key in inventory.keys():
-            print(f"You have {key} already, so you add more to your inventory.")
+            print(f"You have {key} already, but you could always use more, so you add it to your pack.")
             inventory[key] = inventory[key] + ghostItems[key]
-            ghostItems.pop(key)
-            print(inventory[key])
-            print(ghostItems)
-        else: 
-            pass
+            del ghostItems[key]
+            # print("new stuff",ghostItems)
+        
+        elif key not in inventory.keys():
+            newItems = {key:ghostItems[key]}
+            print(f"You did not have any {key}, so you add it to your pack.")
+            inventory.update(newItems.items())
+            del ghostItems[key]
+                
+        
             
-            
+        
 
-#displayInventory()
-
-add_to_inventory({'rope' : 1, 'dragon toenails': 4})
+displayInventory()  
+print("*" * 20)
+addToInventory({'rope': 1, 'dragon toenails': 3, 'potion of healing': 5, 'arrow': 3 })
+print("*" * 20)
+displayInventory()
